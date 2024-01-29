@@ -1,0 +1,39 @@
+// Код шейдера для гауссова размытия
+
+// Константы
+#define KERNEL_SIZE 9 // Размер ядра для гауссова размытия
+#define MAX_RADIUS 7 // Максимальный радиус размытия
+#define STEP_SIZE 1.0 // Шаг для вычисления гауссова размытия
+
+Texture2D originalTexture; // Исходное изображение
+float blurStrength; // Степень размытия
+
+// Функция для вычисления гауссова значения
+float Gaussian(float x, float deviation)
+{
+    return exp(-(x * x) / (2.0 * deviation * deviation)) / (deviation * sqrt(2 * 3.14159));
+}
+
+// Код для вычисления гауссова размытия с указанной степенью
+float4 ComputeGaussianBlur(float2 uv : TEXCOORD) : SV_TARGET
+{
+    float4 color = float4(0, 0, 0, 0);
+    float totalWeight = 0.0;
+
+    // Проход по ядру гаусса
+    for (int i = -MAX_RADIUS; i <= MAX_RADIUS; i += STEP_SIZE)
+    {
+        for (int j = -MAX_RADIUS; j <= MAX_RADIUS; j += STEP_SIZE)
+        {
+            float weight = Gaussian(length(float2(i, j)), blurStrength);
+            totalWeight += weight;
+            color += originalTexture.Sample(originalTextureSampler, uv + float2(i, j)) * weight;
+        }
+    }
+
+    return color / totalWeight;
+}
+
+// Этот шейдер должен быть объявлен как Compute Shader в Unity Editor
+// И применен к объекту с использованием Compute Shader API
+
