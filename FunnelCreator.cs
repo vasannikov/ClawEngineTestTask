@@ -18,9 +18,6 @@ public class FunnelCreator : MonoBehaviour
 
     private void CreateFunnelAtPosition(Vector3 position, float radius)
     {
-        // Here you can modify the terrain to create a funnel at the specified position with the given radius
-        // You can use terrain modification methods to achieve this effect
-        // For example, you can use TerrainData to modify the terrain heights or add textures to the area
 
         Debug.Log("Funnel created at position: " + position + " with radius: " + radius);
     }
